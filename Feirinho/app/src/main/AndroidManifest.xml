@@ -13,15 +13,21 @@
         android:theme="@style/Theme.Feirinho"
         tools:targetApi="31">
         <activity
-            android:screenOrientation="landscape"
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CapivaraAleatoriaActivity"
+            android:exported="true"
+            android:label="@string/title_activity_capivara_aleatoria"
+            android:theme="@style/Theme.Feirinho"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

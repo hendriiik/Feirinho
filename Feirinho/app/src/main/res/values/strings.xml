@@ -4,4 +4,5 @@
     <string name="curso2">Direito</string>
     <string name="curso3">Computação S2</string>
     <string name="curso4">Psicologia</string>
+    <string name="title_activity_capivara_aleatoria">CapivaraAleatoriaActivity</string>
 </resources>

@@ -26,20 +26,56 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
         txtNomeCurso = findViewById(R.id.txtNomeCurso);
         btnVoltar = findViewById(R.id.btnVoltar);
         inserirCursos();
-        txtNomeCurso.setText(aleatorizarCurso());
-
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(CapivaraAleatoriaActivity.this, MainActivity.class);
-                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(it);
-                CapivaraAleatoriaActivity.this.finish();
+                voltarParaMain();
             }
         });
+
+        onViewCreated();
     }
 
-    void inserirCursos() {
+    public void onViewCreated() {
+        //inicia uma thread, para que renderize a view, mas possa aleatorizar o curso
+        new Thread(this::aleatorizarCurso).start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        voltarParaMain();
+    }
+
+    private void voltarParaMain() {
+        Intent it = new Intent(CapivaraAleatoriaActivity.this, MainActivity.class);
+        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(it);
+        CapivaraAleatoriaActivity.this.finish();
+    }
+
+    private void aleatorizarCurso() {
+        Random random = new Random();
+        int cursoId = random.nextInt(listaCursos.size());
+        for (int i = cursoId; i < cursoId + listaCursos.size() / 2; i++) {
+            final String curso = listaCursos.get(i % listaCursos.size());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //só podemos mexer nos componentes da tela na thread principal
+                    txtNomeCurso.setText(curso);
+                }
+            });
+            try {
+                //exibe por 100 ms
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    private void inserirCursos() {
         listaCursos.add("Administração");
         listaCursos.add("Administração Pública");
         listaCursos.add("Agente Comunitário de Saúde");
@@ -125,11 +161,5 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
         listaCursos.add("Terapia Ocupacional");
         listaCursos.add("Turismo");
         listaCursos.add("Zootecnia");
-    }
-
-    String aleatorizarCurso() {
-        Random random = new Random();
-        int cursoId = random.nextInt(listaCursos.size());
-        return listaCursos.get(cursoId);
     }
 }

@@ -59,6 +59,6 @@ public class ShakeDetector implements SensorEventListener {
         String nomeCurso = ctx.getResources().getString(stringId);
         txtNomeCurso.setText(nomeCurso);
 
-        clPlanoDeFundo.setBackgroundColor();
+        //clPlanoDeFundo.setBackgroundColor();
     }
 }

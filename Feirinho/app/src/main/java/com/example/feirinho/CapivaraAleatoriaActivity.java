@@ -3,7 +3,9 @@ package com.example.feirinho;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.CircularArray;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -24,8 +26,17 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
         txtNomeCurso = findViewById(R.id.txtNomeCurso);
         btnVoltar = findViewById(R.id.btnVoltar);
         inserirCursos();
-        aleatorizarCurso();
+        txtNomeCurso.setText(aleatorizarCurso());
 
+        btnVoltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(CapivaraAleatoriaActivity.this, MainActivity.class);
+                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(it);
+                CapivaraAleatoriaActivity.this.finish();
+            }
+        });
     }
 
     void inserirCursos() {
@@ -116,9 +127,9 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
         listaCursos.add("Zootecnia");
     }
 
-    void aleatorizarCurso() {
+    String aleatorizarCurso() {
         Random random = new Random();
         int cursoId = random.nextInt(listaCursos.size());
-        txtNomeCurso.setText(listaCursos.get(cursoId));
+        return listaCursos.get(cursoId);
     }
 }

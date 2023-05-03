@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Feirinho</string>
+    <string name="curso1">Medicina</string>
+    <string name="curso2">Direito</string>
+    <string name="curso3">Computação S2</string>
+    <string name="curso4">Psicologia</string>
+</resources>

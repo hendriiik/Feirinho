@@ -1,31 +1,43 @@
 package com.example.feirinho;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.CircularArray;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class CapivaraAleatoriaActivity extends AppCompatActivity {
+    private static final int QUANTIDADE_CURSOS_EXIBIR = 20;
+    private static final int TEMPO_EXIBICAO_CURSOS_MS = 200;
 
     TextView txtNomeCurso;
     ImageButton btnVoltar;
+    ImageView imgCapivara;
+    Handler handler;
 
     List<String> listaCursos = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capivara_aleatoria);
+        imgCapivara = findViewById(R.id.imgCapivara);
         txtNomeCurso = findViewById(R.id.txtNomeCurso);
         btnVoltar = findViewById(R.id.btnVoltar);
+        handler = new Handler();
+
         inserirCursos();
+
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,6 +55,7 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        //clicou no botão de voltar, volta para a actyivity main
         voltarParaMain();
     }
 
@@ -53,25 +66,50 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
         CapivaraAleatoriaActivity.this.finish();
     }
 
+    /**
+     * Função que pega a lista de cursos e aleatoriza a imagem e o curso que aparece na tela, animando até chegar no curso sorteado
+     */
     private void aleatorizarCurso() {
+        int proximoCurso = 0, ultimoCurso = 0;
         Random random = new Random();
-        int cursoId = random.nextInt(listaCursos.size());
-        for (int i = cursoId; i < cursoId + listaCursos.size() / 2; i++) {
-            final String curso = listaCursos.get(i % listaCursos.size());
+        for (int i = 0; i < QUANTIDADE_CURSOS_EXIBIR; i++) {
+            //TODO: melhorar a aleatorização dos cursos para evitar que apareça o mesmo curso mais de uma vez (refinamento)
+            //(criar string com os cursos que já foram, e ir aleatorizando os outros (ver se isso não vai afetar o desempenho)
+
+
+            //TODO 2: esconder o botão de voltar até terminar de aleatorizar os cursos
+            while (proximoCurso == ultimoCurso) {
+                //evita que exiba o mesmo curso 2 vezes seguidas
+                proximoCurso = random.nextInt(listaCursos.size());
+            }
+            String curso = listaCursos.get(proximoCurso);
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     //só podemos mexer nos componentes da tela na thread principal
                     txtNomeCurso.setText(curso);
+                    String arquivo = converterCursoParaNomeArquivo(curso);
+                    int idArquivo = getResources().getIdentifier(arquivo, "drawable", getPackageName());
+
+                    if (idArquivo != 0) {
+                        imgCapivara.setImageResource(idArquivo);
+                    } else {
+                        imgCapivara.setImageResource(R.drawable.capi_teste);
+                        Log.d("teste", "O arquivo " + arquivo + " não existe");
+                    }
                 }
             });
             try {
-                //exibe por 100 ms
-                Thread.sleep(100);
+                //espera um pouco antes de mostrar o próximo curso
+                Thread.sleep(TEMPO_EXIBICAO_CURSOS_MS);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
+            ultimoCurso = proximoCurso;
         }
+
     }
 
 
@@ -161,5 +199,16 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
         listaCursos.add("Terapia Ocupacional");
         listaCursos.add("Turismo");
         listaCursos.add("Zootecnia");
+    }
+
+    /**
+     * Método que converte nomes de cursos com acentos, espaços e vírgulas, para o padrão de arquivo
+     */
+    private String converterCursoParaNomeArquivo(String curso) {
+        curso = curso.toLowerCase();
+        curso = Normalizer.normalize(curso, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+        curso = curso.replaceAll(" ", "_");
+        curso = curso.replaceAll(",", "");  //História, memória e imagem ==> historia_memoria_e_imagem
+        return curso;
     }
 }

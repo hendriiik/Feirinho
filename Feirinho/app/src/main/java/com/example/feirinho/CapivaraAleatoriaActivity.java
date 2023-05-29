@@ -80,8 +80,7 @@ public class CapivaraAleatoriaActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //clicou no botão de voltar, volta para a actyivity main
-        voltarParaMain();
+        //não fazer nada se esbarrar no botão de voltar
     }
 
     private void voltarParaMain() {

@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Feirinho" parent="Base.Theme.Feirinho" />
+    <style name="Theme.Feirinho" parent="Base.Theme.Feirinho"  />
 </resources>

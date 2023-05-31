@@ -56,18 +56,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@null"
-        android:fontFamily="sans-serif"
+        android:fontFamily="@font/rajdhani_medium"
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
         android:text="Curso"
+        android:textFontWeight="500"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="35sp"
+        android:textSize="32sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/imgMoldura"
         app:layout_constraintStart_toStartOf="@id/imgMoldura"
-        app:layout_constraintTop_toBottomOf="@+id/imgCapivara" />
+        app:layout_constraintTop_toBottomOf="@+id/imgCapivara"
+        tools:targetApi="p" />
 
 
     <ImageButton
